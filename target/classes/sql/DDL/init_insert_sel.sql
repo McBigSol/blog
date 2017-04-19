@@ -19,13 +19,17 @@ values
 	,0
 )
 
-select
-	 post_idx
-	,post_category
-	,title
-	,contents
-	,status
-	,reg_date
-	,post_witer
-from post
+SELECT
+				POST_IDX,
+				POST_CATEGORY,
+				TITLE,
+				CONTENTS,
+				STATUS,
+				REG_DATE,
+				POST_WITER
+			FROM 
+				POST
+			WHERE
+				STATUS = 'N'
+			ORDER BY POST_IDX DESC 
 
