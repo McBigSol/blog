@@ -10,16 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.interline.sample.dao.BlogDAO;
 
-@Service("sampleService")
-public class SampleServiceImpl implements SampleService {
+@Service("blogService")
+public class blogServiceImpl implements blogService {
 	Logger log = Logger.getLogger(this.getClass());
 
 	@Resource(name="blogDAO")
     private BlogDAO blogDAO;
 	
 	@Override
-    public <blogDAO> List<Map<String, Object>> selectBoardList(Map<String, Object> map) throws Exception {
+    public List<Map<String, Object>> selectBoardList(Map<String, Object> map) throws Exception {
         return blogDAO.selectBoardList(map);
 	}
-
 }
