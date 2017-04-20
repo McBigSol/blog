@@ -1,23 +1,96 @@
-insert into post
+INSERT INTO POST
 (
-	 post_idx
-	,post_category
-	,title
-	,contents
-	,status
-	,reg_date
-	,post_witer
+	 POST_IDX
+	,POST_CATEGORY
+	,TITLE
+	,CONTENTS
+	,DEL_STATUS
+	,REG_DATE
+	,WRITER
 )
-values
+VALUES
 (
-	0
+	 1
 	,0
-	,'test'
-	,'contents'
+	,'TEST'
+	,'CONTENTS'
 	,'N'
-	,sysdate()
+	,SYSDATE()
 	,0
+);
+
+INSERT INTO CATEGORY_MASTER
+(
+	 CATE_CODE
+	,CATE_TITLE
 )
+VALUES
+(
+	 1
+	,'日常生活'
+);
+
+INSERT INTO CATEGORY_MASTER
+(
+	 CATE_CODE
+	,CATE_TITLE
+)
+VALUES
+(
+	 2
+	,'おシャベル'
+);
+
+INSERT INTO USER
+(
+	 USER_CODE
+	,USER_ID
+	,PASSWORD
+	,NICK_NAME
+	,AUTHORITY
+)
+VALUES
+(
+	 0
+	,'kunameko'
+    ,'zndhk0'
+    ,'クマネコ'
+    ,'0'
+);
+
+INSERT INTO USER
+(
+	USER_ID
+	,PASSWORD
+	,NICK_NAME
+	,AUTHORITY
+)
+VALUES
+(
+	'neku'
+    ,'1234'
+    ,'ねくねく'
+    ,'1'
+);
+
+INSERT INTO comment
+(
+	 POST_IDX	
+	,CONTENTS	
+	,DEL_STATUS	
+	,REG_DATE	
+	,WRITER		
+)
+VALUES
+(
+	 
+	 0
+	,'日常ってアニメの名前では？'
+	,'N'
+	,SYSDATE()
+	,1
+);
+
 
 SELECT
 				POST_IDX,
