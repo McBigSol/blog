@@ -21,4 +21,14 @@ public class blogServiceImpl implements blogService {
     public List<Map<String, Object>> selectBoardList(Map<String, Object> map) throws Exception {
         return blogDAO.selectBoardList(map);
 	}
+	
+	@Override
+	public List<Map<String, Object>> selectCateList(Map<String, Object> map)  throws Exception{
+	    return blogDAO.selectCateList(map);
+	}
+
+    @Override
+    public void insertBoard(Map<String, Object> map) throws Exception {
+        blogDAO.insertBoard(map);
+    };
 }
