@@ -16,5 +16,16 @@ public class BlogDAO extends AbstractDAO{
 		return (List<Map<String, Object>>)selectList("sample.selectBoardList", map);
 		
 	}
+	
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> selectCateList(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return (List<Map<String, Object>>)selectList("sample.selectCateList", map);
+        
+    }	
+    
+    public void insertBoard(Map<String, Object> map) throws Exception{
+        insert("sample.insertBoard", map);
+    }
 
 }
