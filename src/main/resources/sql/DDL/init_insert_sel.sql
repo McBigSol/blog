@@ -57,21 +57,21 @@ INSERT INTO CATEGORY_MASTER
 VALUES
 (
 	 2
-	,'Mrs.category'
+	,'おしゃべり'
 );
-
+status;
 INSERT INTO USER
 (
-	 USER_CODE
-	,USER_ID
+	 
+	USER_ID
 	,PASSWORD
 	,NICK_NAME
 	,AUTHORITY
 )
 VALUES
 (
-	 0
-	,'kunameko'
+	
+	'kunameko'
     ,'zndhk0'
     ,'クマネコ'
     ,'0'

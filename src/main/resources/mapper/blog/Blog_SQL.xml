@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="blog" >
+    <!-- ポスト一覧取得 -->
+	<select id="selectBoardList" parameterType="hashmap" resultType="hashmap">
+		<include refid="common.pagingPre"/>
+        <![CDATA[
+            SELECT
+                p.POST_IDX,
+                p.POST_CATEGORY,
+                c.CATE_TITLE as POST_CATE_TITLE,
+                p.TITLE,
+                p.CONTENTS,
+                p.DEL_STATUS,
+                p.REG_DATE,
+                p.WRITER    
+            FROM 
+                POST p
+            INNER JOIN
+                CATEGORY_MASTER c
+            ON p.POST_CATEGORY = c.CATE_CODE
+            WHERE
+                p.DEL_STATUS = 'N'
+            ORDER BY p.POST_IDX DESC
+		]]>
+        <include refid="common.pagingPost"/>
+    </select>
+    <!-- カテゴリリスト取得 -->
+    <select id="selectCateList" resultType="hashmap">
+        <![CDATA[
+           SELECT
+                CATE_CODE,
+                CATE_TITLE
+           FROM
+                CATEGORY_MASTER;
+        ]]>
+    </select>
+    <!-- ポスト書き込み -->
+    <insert id="insertBoard" parameterType="hashmap">
+        <![CDATA[
+            INSERT INTO POST
+                (
+                     POST_CATEGORY
+                    ,TITLE
+                    ,CONTENTS
+                    ,DEL_STATUS
+                    ,REG_DATE
+                    ,WRITER
+                )
+                VALUES
+                (
+                     #{sCategory}
+                    ,#{TITLE}
+                    ,#{CONTENTS}
+                    ,'N'
+                    ,SYSDATE()
+                    ,0
+                );
+        ]]>
+    </insert>
+    
+    <!-- 該当のカテゴリのみ検索 -->
+    
+    <!--  ポスト詳細  -->
+    <select id="selectBoardDetail" parameterType="hashmap" resultType="hashmap">
+        <![CDATA[
+            SELECT
+                 p.POST_IDX
+                ,p.TITLE
+                ,p.POST_CATEGORY
+                ,c.CATE_TITLE
+                ,p.CONTENTS
+                ,p.REG_DATE
+                ,p.WRITER
+            FROM
+                POST p
+            INNER JOIN
+                CATEGORY_MASTER c
+            ON p.POST_CATEGORY = c.CATE_CODE
+            WHERE 
+                p.POST_IDX = #{POST_IDX}
+            AND 
+                p.DEL_STATUS = 'N';
+        ]]>
+    </select>
+    <!-- カテゴリ検索 -->
+    <select id="selectBoardCategory" parameterType="hashmap" resultType="hashmap">
+        <![CDATA[
+             SELECT
+                p.POST_IDX,
+                p.POST_CATEGORY,
+                c.CATE_TITLE as POST_CATE_TITLE,
+                p.TITLE,
+                p.CONTENTS,
+                p.DEL_STATUS,
+                p.REG_DATE,
+                p.WRITER    
+            FROM 
+                POST p
+            INNER JOIN
+                CATEGORY_MASTER c
+            ON p.POST_CATEGORY = c.CATE_CODE
+            WHERE
+                p.DEL_STATUS = 'N'
+            AND
+                p.POST_CATEGORY = #{CATE_CODE}
+            ORDER BY p.POST_IDX DESC; 
+        ]]>
+    </select>
+    
+    <update id="deleteBoard" parameterType="hashmap">
+        <![CDATA[
+            UPDATE POST
+            SET
+                DEL_STATUS = 'Y'
+            WHERE
+                POST_IDX = #{POST_IDX}
+        ]]>
+    </update>
+    <update id="updateBoard" parameterType="hashmap">
+        <![CDATA[
+          UPDATE POST
+          SET
+             POST_CATEGORY = #{sCategory}
+            ,TITLE = #{TITLE}
+            ,CONTENTS = #{CONTENTS}
+          WHERE
+            POST_IDX = #{POST_IDX}
+          AND
+            WRITER = #{WRITER}
+        ]]>
+    </update>
+     <insert id="insertComment" parameterType="hashmap">
+        <![CDATA[
+        INSERT INTO COMMENT
+        (
+             POST_IDX
+            ,CONTENTS
+            ,DEL_STATUS
+            ,REG_DATE
+            ,WRITER
+        )
+        VALUES
+        (
+             #{POST_IDX}
+            ,#{CONTENTS}
+            ,'N'
+            ,SYSDATE()
+            ,1
+            <!-- #{WRITER} -->
+        );
+        ]]>
+     </insert>
+     <select id="selectComment" parameterType="hashmap" resultMap="hashmap">
+       <![CDATA[
+        SELECT
+             c.CONTENTS
+            ,c.WRITER
+            ,u.NICK_NAME
+            ,u.AUTHORITY
+            ,c.REG_DATE
+        FROM COMMENT c
+        INNER JOIN 
+            USER u
+        ON 
+            c.WRITER = u.USER_CODE
+        WHERE
+            c.POST_IDX = #{POST_IDX}
+        AND
+            c.DEL_STATUS = 'N'; 
+        ]]>
+     </select>
+    
+</mapper>

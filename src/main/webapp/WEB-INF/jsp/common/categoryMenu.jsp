@@ -4,18 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ include file="/WEB-INF/include/include-header.jsp" %>
 </head>
 <body>
-    <div class="category-menu">
-    <table>
+    <div class="category-menu" style="vertical-align: top;">
+    <table class="vAlign_top wdp_90">
     <c:choose>
         <c:when test="${fn:length(cate_list) > 0}">
             <c:forEach items="${cate_list}" var="row">
                 <tr>
                     <td>
-                        ${row.CATE_TITLE }
+                        <a href="#this" class="menu_l" name="cate_title">${row.CATE_TITLE }</a>
+                        <input type="hidden" id="CATE_CODE" name="CATE_CODE" value="${row.CATE_CODE}"/>
                     </td>
                 </tr>
             </c:forEach>
@@ -27,4 +27,21 @@
     </table>
     </div>
 </body>
+<%@ include file="/WEB-INF/include/include-body.jsp" %>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $("a[name='cate_title']").on("click", function(e){ //カテゴリタイトルにクリックの付与
+        e.preventDefault();
+        fn_openBoardCate($(this));
+        });
+    });
+
+    function fn_openBoardCate(obj){
+        var comSubmit = new ComSubmit();
+        comSubmit.setUrl("<c:url value='/blog/openBoardCate.do' />");
+        comSubmit.addParam("CATE_CODE", obj.parent().find("#CATE_CODE").val());
+        console.log("cate code : " + obj.parent().find("#CATE_CODE").val());
+        comSubmit.submit();
+    }
+</script>
 </html>
