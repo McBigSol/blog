@@ -20,4 +20,5 @@ public interface blogService {
     void insertComment(Map<String, Object> map) throws Exception;
     //コメント詳細
     List<Map<String, Object>> selectComment(Map<String, Object> map) throws Exception;
+    Map<String, Object> selectLoginInfo(Map<String, Object> map) throws Exception;
 }

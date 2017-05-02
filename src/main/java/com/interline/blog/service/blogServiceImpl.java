@@ -24,6 +24,7 @@ public class blogServiceImpl implements blogService {
 	
 	@Override
 	public List<Map<String, Object>> selectCateList()  throws Exception{
+	    log.debug("in selectCateList blogservice");
 	    return blogDAO.selectCateList();
 	}
 
@@ -71,6 +72,12 @@ public class blogServiceImpl implements blogService {
     public List<Map<String, Object>> selectComment(Map<String, Object> map) throws Exception {
         // TODO Auto-generated method stub
         return blogDAO.selectComment(map);
+    }
+
+    @Override
+    public Map<String, Object> selectLoginInfo(Map<String, Object> map) throws Exception {
+        // TODO Auto-generated method stub
+        return blogDAO.selecLoginInfo(map);
     }
     
     

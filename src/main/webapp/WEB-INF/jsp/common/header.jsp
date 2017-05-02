@@ -13,15 +13,25 @@
     <table class="header">
         <tr>
             <td>
-                <table class="login_panel" border="1">
+                <table class="login_panel">
                     <tr>
-                        <td>
-                        ログイン
-                        </td>
-                        <td>
-                        新規登録
-                        </td>        
+                    <c:choose>
+                        <c:when test="${fn:length(loginInfo) > 0 }">
+                            <td>
+                                ${loginInfo.NICK_NAME}さん　ようこそ！
+                            </td> 
+                        </c:when>
+                        <c:otherwise>
+	                        <td>
+	                            <a href="<c:url value='/blog/login.do' />">ログイン</a>
+	                        </td>
+	                        <td>
+	                           <a href="<c:url value='/blog/join.do' />">新規登録</a>
+	                        </td>        
+                        </c:otherwise>
+                    </c:choose>
                     </tr>
+                        
                 </table>
                     <!-- <div class="login_panel">
 		                ログイン
@@ -46,7 +56,11 @@
 	                </div>
 	                <%-- 管理者メニュー --%>
 	                <div >
-	                    <a href="<c:url value='/blog/openBoardWrite.do' />" class="menu_l" >新規作成</a> 
+	                   <c:choose>
+                           <c:when test="${fn:length(loginInfo) > 0 }">
+	                           <a href="<c:url value='/blog/openBoardWrite.do' />" class="menu_l" >新規作成</a>
+	                       </c:when>
+	                   </c:choose> 
 	                </div>
 	                <div class="menu_r">
 	                   <!-- Vistor  -->

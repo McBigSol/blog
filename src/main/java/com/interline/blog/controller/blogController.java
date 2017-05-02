@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.interline.blog.dao.BlogDAO;
 import com.interline.blog.service.blogService;
@@ -23,14 +26,54 @@ public class blogController {
     @Resource(name="blogService")
     private blogService blogService;
     
+    @RequestMapping(value="/blog/login.do")
+    public ModelAndView login(Map<String, Object> map) throws Exception{
+        ModelAndView mv = new ModelAndView("/common/Login");
+        //mv.setView("redirect:/blog/openBoardList.do");
+        
+        
+        return mv;
+    }
+    @RequestMapping(value="/blog/loginConfirm.do")
+    public ModelAndView loginConfirm(CommandMap commandMap, HttpServletRequest request) throws Exception{
+        ModelAndView mv = new ModelAndView("redirect:/blog/openBoardList.do");
+          for(String key : commandMap.getMap().keySet()){
+              String value = commandMap.getMap().get(key).toString();
+              log.debug(key + " : " + value);
+          }
+        
+        Map<String, Object> loginInfo = blogService.selectLoginInfo(commandMap.getMap());
+        //mv.addObject("loginInfo", loginInfo);
+        
+        log.debug("selectlogininfo return : ");
+        log.debug("selectlogininfo size : " +loginInfo.size());
+        log.debug("selectlogininfo result : " + loginInfo.get("NICK_NAME"));
+        
+        request.getSession().setAttribute("loginInfo", loginInfo);
+        mv.addObject(request);
+        return mv;
+    }
     
     @RequestMapping(value="/blog/openBoardList.do")
-    public ModelAndView openSampleList(Map<String,Object> map) throws Exception{
+    public ModelAndView openSampleList(Map<String,Object> map, HttpServletRequest request) throws Exception{
         ModelAndView mv = new ModelAndView("/blog/boardList");   
         //List<Map<String,Object>> list = blogService.selectBoardList(map);
         List<Map<String,Object>> cate_list = blogService.selectCateList();
         
-        //mv.addObject("list", list);
+//        log.debug("getid () : " + request.getSession().getId());
+        
+//        Map<String,Object> loginInfo = (Map<String, Object>) request.getSession().getAttribute("loginInfo");
+////        //log.debug(request.getSession().getAttribute("loginInfo"));
+////        log.debug(loginInfo.get("USER_CODE"));
+////        log.debug(loginInfo.get("NICK_NAME"));
+//        
+//        log.debug("login check start");
+//      for(String key : map.keySet()){
+//          String value = map.get(key).toString();
+//          log.debug(key + " : " + value);
+//      }
+//      log.debug("login check end");
+//        //mv.addObject("list", list);
         mv.addObject("cate_list", cate_list);
         
         return mv;
@@ -50,22 +93,6 @@ public class blogController {
         return mv;
     }
     
-    /**
-    @RequestMapping(value="/sample/testMapArgumentResolver.do")
-    public ModelAndView testMapArgumentResolver(CommandMap commandMap) throws Exception{
-        ModelAndView mv = new ModelAndView("");
-         
-        if(commandMap.isEmpty() == false){
-            Iterator<Entry<String,Object>> iterator = commandMap.getMap().entrySet().iterator();
-            Entry<String,Object> entry = null;
-            while(iterator.hasNext()){
-                entry = iterator.next();
-                log.debug("key : "+entry.getKey()+", value : "+entry.getValue());
-            }
-        }
-        return mv;
-    }
-    **/
     //ポスト作成に遷移
     @RequestMapping(value="/blog/openBoardWrite.do")
     public ModelAndView openBoardWrite(CommandMap commandMap) throws Exception{
@@ -97,7 +124,6 @@ public class blogController {
     public ModelAndView openBoardDetail(CommandMap commandMap) throws Exception{
         ModelAndView mv = new ModelAndView("/blog/boardDetail");
         
-        Map<String,Object> map = blogService.selectBoardDetail(commandMap.getMap());
         
         //内容確認のため
 //        for(String key : commandMap.getMap().keySet()){
@@ -108,8 +134,8 @@ public class blogController {
 //            String value = map.get(key).toString();
 //            log.debug(key + " : " + value);
 //        }
-        log.debug("map issize : " + map.size());
-        
+
+        Map<String,Object> map = blogService.selectBoardDetail(commandMap.getMap());
         List<Map<String,Object>> cate_list = blogService.selectCateList();
         List<Map<String,Object>> comment_list = blogService.selectComment(commandMap.getMap());
         mv.addObject("map",map);
@@ -117,26 +143,6 @@ public class blogController {
         mv.addObject("comment_list",comment_list);
         return mv;
     } 
-    
-//    @RequestMapping(value="/blog/openBoardUpdate.do")
-//    public ModelAndView openBoardUpdate(CommandMap commandMap) throws Exception{
-//        ModelAndView mv = new ModelAndView("/sample/boardUpdate");
-//         
-//        Map<String,Object> map = blogService.selectBoardDetail(commandMap.getMap());
-//        mv.addObject("map", map);
-//         
-//        return mv;
-//    }
-//     
-//    @RequestMapping(value="/blog/updateBoard.do")
-//    public ModelAndView updateBoard(CommandMap commandMap) throws Exception{
-//        ModelAndView mv = new ModelAndView("redirect:/sample/openBoardDetail.do");
-//         
-//        blogService.updateBoard(commandMap.getMap());
-//         
-//        mv.addObject("IDX", commandMap.get("IDX"));
-//        return mv;
-//    }
     
     @RequestMapping(value="/blog/deleteBoard.do")
     public ModelAndView deleteBoard(CommandMap commandMap) throws Exception{
@@ -195,20 +201,31 @@ public class blogController {
     }
     
     @RequestMapping("/blog/insertComment.do")
-    public ModelAndView insertComment(CommandMap commandmap) throws Exception{
+    public ModelAndView insertComment(CommandMap commandMap) throws Exception{
         ModelAndView mv = new ModelAndView("/blog/boardDetail");
-        blogService.insertComment(commandmap.getMap());
-        //selectComment(commandmap);
-        
+        //コメント登録
+        blogService.insertComment(commandMap.getMap());
+        //登録後再表示のための処理
+        Map<String,Object> map = blogService.selectBoardDetail(commandMap.getMap());
+        List<Map<String,Object>> cate_list = blogService.selectCateList();
+        List<Map<String,Object>> comment_list = blogService.selectComment(commandMap.getMap());
+        //mvオブジェクトにセット
+        mv.addObject("map",map);
+        mv.addObject("cate_list",cate_list);
+        mv.addObject("comment_list",comment_list);
+
         return mv;
     }
-//    @RequestMapping("/blog/selectComment.do")
-//    public ModelAndView selectComment(CommandMap commandmap) throws Exception{
-//        ModelAndView mv = new ModelAndView("/blog/boardDetail");
-//        List<Map<String, Object>> comment_list = blogService.selectComment(commandmap.getMap());
-//        mv.addObject("comment_list",comment_list);
-//        return mv;
-//    }
+    @RequestMapping("/blog/join.do")
+    public ModelAndView join(CommandMap commandMap) throws Exception{
+        ModelAndView mv = new ModelAndView("/common/Join");
+        return mv;
+    }
+    @RequestMapping("/blog/joinConfirm.do")
+    public ModelAndView joinConfirm(CommandMap commandMap) throws Exception{
+        ModelAndView mv = new ModelAndView("redirect:/blog/login.do");
+        return mv;
+    }
     
 }
 	

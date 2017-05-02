@@ -13,7 +13,7 @@
                 p.TITLE,
                 p.CONTENTS,
                 p.DEL_STATUS,
-                p.REG_DATE,
+                DATE_FORMAT(p.REG_DATE,'%Y-%m-%d') as REG_DATE,
                 p.WRITER    
             FROM 
                 POST p
@@ -131,8 +131,8 @@
             WRITER = #{WRITER}
         ]]>
     </update>
-     <insert id="insertComment" parameterType="hashmap">
-        <![CDATA[
+    <insert id="insertComment" parameterType="hashmap">
+    <![CDATA[
         INSERT INTO COMMENT
         (
              POST_IDX
@@ -144,15 +144,14 @@
         VALUES
         (
              #{POST_IDX}
-            ,#{CONTENTS}
+            ,#{cCONTENTS}
             ,'N'
             ,SYSDATE()
-            ,1
-            <!-- #{WRITER} -->
+            ,#{WRITER}
         );
         ]]>
-     </insert>
-     <select id="selectComment" parameterType="hashmap" resultMap="hashmap">
+    </insert>
+    <select id="selectComment" parameterType="hashmap" resultType="hashmap">
        <![CDATA[
         SELECT
              c.CONTENTS
@@ -170,6 +169,21 @@
         AND
             c.DEL_STATUS = 'N'; 
         ]]>
-     </select>
-    
+    </select>
+    <select id="selectLoginInfo" parameterType="hashmap" resultType="hashmap">
+        <![CDATA[
+            SELECT
+                 USER_CODE
+                ,USER_ID
+                ,PASSWORD
+                ,NICK_NAME
+                ,AUTHORITY
+            FROM
+                USER
+            WHERE
+                USER_ID = #{LOGIN_ID}
+            AND
+                PASSWORD = #{LOGIN_PW}
+        ]]>
+    </select>
 </mapper>

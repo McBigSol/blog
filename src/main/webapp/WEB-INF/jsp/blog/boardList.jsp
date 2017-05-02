@@ -84,8 +84,6 @@
 	    var comSubmit = new ComSubmit();
 	    comSubmit.setUrl("<c:url value='/blog/openBoardDetail.do' />");
 	    comSubmit.addParam("POST_IDX", obj.parent().find("#POST_IDX").val());
-	    console.log("post idx : " + obj.parent().find("#POST_IDX").val());
-	    alert("post idx : " + obj.parent().find("#POST_IDX").val());
 	    comSubmit.submit();
 	}
     
@@ -120,8 +118,8 @@
             var str = "";
             $.each(data.list, function(key, value){
             	console.log("============================in .each");
-            	console.log("POST_IDX :" + value.POST_IDX);
-            	console.log("TITLE :" + value.TITLE);
+            	
+            	console.log("regidate :" + value.REG_DATE);
             	str += "<tr>" +
                             "<td>" + value.POST_IDX + "</td>" +
                             "<td class='title'>" +

@@ -20,6 +20,7 @@ public class BlogDAO extends AbstractDAO{
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> selectCateList() {
         // TODO Auto-generated method stub
+        log.debug("in selectCateList blogDAO");
         return (List<Map<String, Object>>)selectList("blog.selectCateList");
         
     }	
@@ -63,5 +64,10 @@ public class BlogDAO extends AbstractDAO{
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> selectComment(Map<String, Object> map) throws Exception{
         return (List<Map<String, Object>>)selectList("blog.selectComment", map);
+    }
+    //ログイン情報を取得する。
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> selecLoginInfo(Map<String, Object> map) throws Exception{
+        return (Map<String, Object>)selectOne("blog.selectLoginInfo", map);
     }
 }

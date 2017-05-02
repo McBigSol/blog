@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/WEB-INF/include/include-header.jsp" %>
 <%@ include file="/WEB-INF/include/include-body.jsp" %>
+
 </head>
 <body>
 <div class="contents-panel">
@@ -23,7 +24,7 @@
                 <div class="main-contents">
                 <c:choose>
                     <c:when test="${fn:length(map) > 0}">
-                        <table class="width_100">
+                        <table class="width_100 postArea">
                             <tr style="height: 5%;">
                                 <td class="tRight" colspan="4">
                                     ${map.REG_DATE}
@@ -47,39 +48,108 @@
                                 </td>
                             </tr>
                             <tr style="height: 10%;">
-                                <td class="tRight" colspan="4">
-                                    <a href="#this" class="btn" id="modify">修正</a>
-                                    <a href="#this" class="btn" id="delete">削除</a>
-                                    <input type="hidden" id="POST_IDX" value="${map.POST_IDX}"/>
-                                  </td>
+                                
+                               <td class="tRight" colspan="4">
+                                <c:choose>
+                                    <c:when test="${fn:length(loginInfo) > 0 }">
+                                        <a href="#this" class="btn" id="modify">修正</a>
+                                        <a href="#this" class="btn" id="delete">削除</a>
+                                        <br>
+                                        <br>
+                                   </c:when>
+                                   <c:otherwise>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                   </c:otherwise>
+                                </c:choose>
+                                   <input type="hidden" name="POST_IDX" id="POST_IDX" value="${map.POST_IDX}"/>
+                               </td>
+                            </tr>
+                            <tr style="border-bottom:2px solid #252525;">
+                                <td colspan="5">
+                                <hr>
+                                </td>
                             </tr>
                             <tr>
 					            <td colspan="3">
+					                Comment
+					                <hr>
 					                <div class="comment_panel" >
-					                    <table>
+					                    <table class="wdp_90">
 					                        <tbody>
-					                            <tr>
-					                                <td>
-					                                comment
-					                                </td>
-					                            </tr>
-					                            <tr>
-					                                <td>
-					                                    ${comment.NICK_NAME}
-					                                    <input type="hidden" name="WRITER" id="WRITER" value="${comment.WRITER}"/>
-					                                    <input type="hidden" name="AUTHORITY" id="AUTHORITY" value="${comment.AUTHORITY}"/>
-					                                </td>
-					                            </tr>
-					                            <tr>
-					                                <td>
-					                                    <textarea name="cContents" id="cContents" rows="4" cols="100%" >
-					                                    ${comment.CONTENTS}
-					                                    </textarea>
-					                                </td>
-					                                <td>
-					                                    <button name="cInsert" id="cInsert">登録</button>
-					                                </td>
-					                            </tr>
+					                        <c:choose>
+					                          <c:when test="${fn:length(loginInfo) > 0 }">
+	                                              <tr>
+	                                                    <td>
+	                                                       ${loginInfo.NICK_NAME}
+	                                                       ${loginInfo.USER_CODE}
+	                                                       <input type="hidden" name="WRITER" id="WRITER" value="${comment.WRITER}"/>
+	                                                       <input type="hidden" name="AUTHORITY" id="AUTHORITY" value="${comment.AUTHORITY}"/>
+	                                                    </td>
+	                                                </tr>
+	                                                <tr>
+	                                                    <td>
+	                                                       <textarea name="cContents" id="cContents" rows="4" cols="100%" ></textarea>
+	                                                   </td>
+	                                                   <td>
+	                                                       <a href="#this" name="cInsert" id="cInsert">登録</a>
+	                                                   </td>
+	                                                </tr>
+	                                                </c:when>
+	                                                <c:otherwise>
+	                                                    <tr>
+	                                                        <td>
+	                                                            コメントの作成には
+	                                                            <a href="<c:url value='/blog/login.do' />">ログイン</a>
+	                                                            が必要となります。
+	                                                        </td>
+	                                                    </tr>
+	                                                </c:otherwise>
+                                                </c:choose>
+                                                <tr>
+                                                    <td>
+                                                        <br/>
+                                                    </td>
+                                                </tr>
+					                            <c:choose>
+					                               <c:when test="${fn:length(comment_list)  > 0 }">
+							                            <c:forEach items="${comment_list}" var="comment">
+								                            <table class="wdp_90">
+								                            <tr>
+								                                <td style="width: 5%"/>
+								                                <td style="width: 95%"/>
+								                            </tr>
+								                            <tr>
+								                                <td/>
+								                                <td>
+								                                    <hr>
+								                                        <div class="fWhite bgBlack">
+								                                            ${comment.NICK_NAME}
+								                                        </div>
+								                                    <input type="hidden" name="WRITER" id="WRITER" value="${comment.WRITER}"/>
+								                                    <input type="hidden" name="AUTHORITY" id="AUTHORITY" value="${comment.AUTHORITY}"/>
+								                                    <hr>
+								                                </td>
+								                            </tr>
+								                            <tr>
+								                                <td/>
+								                                <td>
+								                                    <pre style="text-align: left;">${comment.CONTENTS}</pre>
+								                                </td>
+								                            </tr>
+								                            </table>
+							                            </c:forEach>
+						                            </c:when>
+						                            <c:otherwise>
+						                               <tr>
+						                                  <td>
+						                                      コメントがありません。
+						                                  </td>
+						                               </tr>
+						                            </c:otherwise>
+					                            </c:choose>
 					                        </tbody>
 					                    </table>
 					                </div>
@@ -109,9 +179,9 @@
 	        e.preventDefault();
 	        fn_deleteBoard($(this));
 	    });
-	    $("cInsert").on("click",function(e){
+	    $("#cInsert").on("click",function(e){
 	    	e.preventDefault();
-	    	fn_insertCommnet($(this));
+	    	fn_insertComment($(this));
 	    });
 	});
 	
@@ -129,10 +199,18 @@
 	    comSubmit.addParam("POST_IDX", obj.parent().find("#POST_IDX").val());
 	    comSubmit.submit();
 	}
-	function fn_insertComnet(obj){
+	function fn_insertComment(obj){
 		var comSubmit = new ComSubmit();
-		comSubmit.setURL("<c:url value='/blog/insertComment.do' />");
-		comSubmit.addParam()
+		console.log("fn_insertComment 進入");
+		comSubmit.setUrl("<c:url value='/blog/insertComment.do' />");
+		comSubmit.addParam("POST_IDX", $("#POST_IDX").val());
+		comSubmit.addParam("WRITER", ${loginInfo.USER_CODE});
+		comSubmit.addParam("cCONTENTS", $("#cContents").val());
+		<!-- debug -->
+		console.log("POST_IDX     : " + $("#POST_IDX").val());
+		console.log("WRITER     : " + ${loginInfo.USER_CODE});
+		console.log("cCONTENTS     : " + $("#cContents").val());
+		comSubmit.submit();
 	}
 </script>
 </body>
