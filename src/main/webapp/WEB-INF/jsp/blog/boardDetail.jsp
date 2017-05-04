@@ -12,18 +12,23 @@
 <div class="contents-panel">
     <table class="contents-table">
         <tr>
+            <td style="width: 15%;"/>
+            <td style="width: 85%;"/>
+        </tr>
+        <tr>
             <td colspan="2">
                 <jsp:include page="/WEB-INF/jsp/common/header.jsp"/>
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="vAlign_top">
                 <jsp:include page="/WEB-INF/jsp/common/categoryMenu.jsp"/>
             </td>
             <td>
                 <div class="main-contents">
                 <c:choose>
                     <c:when test="${fn:length(map) > 0}">
+                        <c:forEach items="${map}" var="map">
                         <table class="width_100 postArea">
                             <tr style="height: 5%;">
                                 <td class="tRight" colspan="4">
@@ -51,7 +56,7 @@
                                 
                                <td class="tRight" colspan="4">
                                 <c:choose>
-                                    <c:when test="${fn:length(loginInfo) > 0 }">
+                                    <c:when test="${loginInfo.USER_CODE == 0 }">
                                         <a href="#this" class="btn" id="modify">修正</a>
                                         <a href="#this" class="btn" id="delete">削除</a>
                                         <br>
@@ -79,18 +84,21 @@
 					                <div class="comment_panel" >
 					                    <table class="wdp_90">
 					                        <tbody>
+					                        <tr>
+					                           <td style="width: 70%"/>
+					                           <td style="width: 30%"/>
+					                        </tr>
 					                        <c:choose>
 					                          <c:when test="${fn:length(loginInfo) > 0 }">
 	                                              <tr>
-	                                                    <td>
+	                                                    <td colspan="2">
 	                                                       ${loginInfo.NICK_NAME}
-	                                                       ${loginInfo.USER_CODE}
 	                                                       <input type="hidden" name="WRITER" id="WRITER" value="${comment.WRITER}"/>
 	                                                       <input type="hidden" name="AUTHORITY" id="AUTHORITY" value="${comment.AUTHORITY}"/>
 	                                                    </td>
 	                                                </tr>
 	                                                <tr>
-	                                                    <td>
+	                                                    <td >
 	                                                       <textarea name="cContents" id="cContents" rows="4" cols="100%" ></textarea>
 	                                                   </td>
 	                                                   <td>
@@ -113,49 +121,56 @@
                                                         <br/>
                                                     </td>
                                                 </tr>
-					                            <c:choose>
-					                               <c:when test="${fn:length(comment_list)  > 0 }">
-							                            <c:forEach items="${comment_list}" var="comment">
-								                            <table class="wdp_90">
-								                            <tr>
-								                                <td style="width: 5%"/>
-								                                <td style="width: 95%"/>
-								                            </tr>
-								                            <tr>
-								                                <td/>
-								                                <td>
-								                                    <hr>
-								                                        <div class="fWhite bgBlack">
-								                                            ${comment.NICK_NAME}
-								                                        </div>
-								                                    <input type="hidden" name="WRITER" id="WRITER" value="${comment.WRITER}"/>
-								                                    <input type="hidden" name="AUTHORITY" id="AUTHORITY" value="${comment.AUTHORITY}"/>
-								                                    <hr>
-								                                </td>
-								                            </tr>
-								                            <tr>
-								                                <td/>
-								                                <td>
-								                                    <pre style="text-align: left;">${comment.CONTENTS}</pre>
-								                                </td>
-								                            </tr>
-								                            </table>
-							                            </c:forEach>
-						                            </c:when>
-						                            <c:otherwise>
-						                               <tr>
-						                                  <td>
-						                                      コメントがありません。
-						                                  </td>
-						                               </tr>
-						                            </c:otherwise>
-					                            </c:choose>
+                                                <tr>
+                                                    <td colspan="2">
+						                            <c:choose>
+						                               <c:when test="${fn:length(comment_list)  > 0 }">
+								                            <c:forEach items="${comment_list}" var="comment">
+								                                <c:if test="${comment.POST_IDX eq map.POST_IDX}">
+										                            <table class="wdp_90">
+										                            <tr>
+										                                <td style="width: 5%"/>
+										                                <td style="width: 95%"/>
+										                            </tr>
+										                            <tr>
+										                                <td/>
+										                                <td>
+										                                    <hr>
+										                                        <div class="fWhite bgBlack">
+										                                            ${comment.NICK_NAME}
+										                                        </div>
+										                                    <input type="hidden" name="WRITER" id="WRITER" value="${comment.WRITER}"/>
+										                                    <input type="hidden" name="AUTHORITY" id="AUTHORITY" value="${comment.AUTHORITY}"/>
+										                                    <hr>
+										                                </td>
+										                            </tr>
+										                            <tr>
+										                                <td/>
+										                                <td>
+										                                    <pre style="text-align: left;">${comment.CONTENTS}</pre>
+										                                </td>
+										                            </tr>
+										                            </table>
+								                                 </c:if>
+								                            </c:forEach>
+							                            </c:when>
+							                            <c:otherwise>
+							                               <tr>
+							                                  <td>
+							                                      コメントがありません。
+							                                  </td>
+							                               </tr>
+							                            </c:otherwise>
+						                            </c:choose>
+						                            </td>
+					                            </tr>
 					                        </tbody>
 					                    </table>
 					                </div>
 					            </td>
 					         </tr>
                         </table>
+                        </c:forEach>
                     </c:when>
                     <c:otherwise>
                         該当ポストの情報の取得に失敗いたしました。
@@ -201,15 +216,10 @@
 	}
 	function fn_insertComment(obj){
 		var comSubmit = new ComSubmit();
-		console.log("fn_insertComment 進入");
 		comSubmit.setUrl("<c:url value='/blog/insertComment.do' />");
 		comSubmit.addParam("POST_IDX", $("#POST_IDX").val());
-		comSubmit.addParam("WRITER", ${loginInfo.USER_CODE});
 		comSubmit.addParam("cCONTENTS", $("#cContents").val());
-		<!-- debug -->
-		console.log("POST_IDX     : " + $("#POST_IDX").val());
-		console.log("WRITER     : " + ${loginInfo.USER_CODE});
-		console.log("cCONTENTS     : " + $("#cContents").val());
+		comSubmit.addParam("WRITER", "${loginInfo.USER_CODE}");
 		comSubmit.submit();
 	}
 </script>

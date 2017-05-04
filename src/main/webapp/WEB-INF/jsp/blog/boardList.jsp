@@ -13,8 +13,8 @@
                 <jsp:include page="/WEB-INF/jsp/common/header.jsp"/>
             </td>
         </tr>
-        <tr class="hdp_90">
-            <td>
+        <tr class="hdp_90 vAlign_top">
+            <td class="">
                 <jsp:include page="/WEB-INF/jsp/common/categoryMenu.jsp"/>
             </td>
             <td>
@@ -64,10 +64,17 @@
 			    </div><!-- main-contents end -->
             </td>
         </tr>
+        <tr>
+            <td>
+            </td>
+            <td colspan="3">
+            <br/>
+            <div id="PAGE_NAVI" class="tCenter"></div>
+            <input type="hidden" id="PAGE_INDEX" name="PAGE_INDEX"/>
+            <br/>
+            </td>
+        </tr>
     </table>
-    <div id="PAGE_NAVI"></div>
-        <input type="hidden" id="PAGE_INDEX" name="PAGE_INDEX"/>
-    <br/>
 </div><!-- contents-panel end -->  
 <%@ include file="/WEB-INF/include/include-body.jsp" %>
 <script type="text/javascript">
@@ -89,14 +96,26 @@
     
     function fn_selectBoardList(pageNo){
         var comAjax = new ComAjax();
-        comAjax.setUrl("<c:url value='/blog/selectBoardList.do' />");
+        var actionUrlFlg = "${list_type}"; //URLを区分するためのFLG
+        var actionURL = "<c:url value='/blog/selectBoardList.do' />";
+        
+        //ポスト一覧の検索タイプによって参照するURLが異なる。
+        if(actionUrlFlg == "cate"){
+        	console.log("url flg : " + actionUrlFlg);
+        	actionURL = "<c:url value='/blog/selectBoardCate.do' />"
+        	
+        }
+        comAjax.setUrl(actionURL);
         comAjax.setCallback("fn_selectBoardListCallback");
         comAjax.addParam("PAGE_INDEX",pageNo);
-        comAjax.addParam("PAGE_ROW", 15);
+        comAjax.addParam("PAGE_ROW", 5);
+        comAjax.addParam("CATE_CODE", "${CATE_CODE}");
+        
         comAjax.ajax();
     }
     function fn_selectBoardListCallback(data){
         var total = data.TOTAL;
+        console.log("total : "+total);
         /* var body = $("table>tbody"); */
         var body = $("#tBoardBody");
         body.empty();
@@ -117,9 +136,6 @@
              
             var str = "";
             $.each(data.list, function(key, value){
-            	console.log("============================in .each");
-            	
-            	console.log("regidate :" + value.REG_DATE);
             	str += "<tr>" +
                             "<td>" + value.POST_IDX + "</td>" +
                             "<td class='title'>" +
@@ -131,7 +147,6 @@
                         "</tr>";
             });
             body.append(str);
-             
             $("a[name='title']").on("click", function(e){ 
                 e.preventDefault();
                 fn_openBoardDetail($(this));

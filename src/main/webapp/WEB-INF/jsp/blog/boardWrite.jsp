@@ -12,7 +12,7 @@
                 <jsp:include page="/WEB-INF/jsp/common/header.jsp"/>
             </td>
         </tr>
-        <tr>
+        <tr class="vAlign_top">
             <td>
                 <jsp:include page="/WEB-INF/jsp/common/categoryMenu.jsp"/>
             </td>
@@ -27,7 +27,7 @@
 				                    <td><input type="text" id="TITLE" name="TITLE" class="wdp_90" value="${uDetail.TITLE}" ></input></td>
 				                </tr>
 				                <tr>
-				                    <th scpoe="row"></th>
+				                    <th scope="row">カテゴリ</th>
 				                    <td>
 				                        <select id="sCategory" name="sCategory" >
 				                            <c:forEach var="category" items="${cate_list}">

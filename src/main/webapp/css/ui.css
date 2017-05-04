@@ -23,6 +23,13 @@
 	vertical-align: middle;
 	text-align: center;
 }
+.error-contents{
+    width : 50%;
+    vertical-align: middle;
+    text-align: left;
+    color: red;
+    border: 2px solid #ff2600;
+}
 .login-title{
 	background-color: black;
 	color: white;
@@ -31,6 +38,7 @@
 }
 .category-menu{
     width: 100%;
+    height: *;
     color: white !important;
     background-color: black;
 }
@@ -72,7 +80,7 @@
 	background-color: black !Important;
 }
  
-a:link, a:visited {text-decoration: none;}
+a:link, a:visited {text-decoration: none; color: black;}
  
 .board_list {width:100%;border-top:2px solid #252525;border-bottom:1px solid #ccc}
 .board_list thead th:first-child{background-image:none}

@@ -34,11 +34,11 @@ public class blogServiceImpl implements blogService {
     };
     
     @SuppressWarnings("unchecked")
-    public Map<String, Object> selectBoardDetail(Map<String, Object> map) throws Exception{
+    public List<Map<String, Object>> selectBoardDetail(Map<String, Object> map) throws Exception{
         //return typeが異なる理由は、２つの処理を行うためである。
         //hit数
         //blogDAO.updateHitCnt(map);
-        Map<String, Object> resultMap = blogDAO.selectBoardDetail(map);
+        List<Map<String, Object>> resultMap = blogDAO.selectBoardDetail(map);
         return resultMap;
     }
     public void updateHitCnt(Map<String, Object> map) throws Exception{
@@ -79,8 +79,10 @@ public class blogServiceImpl implements blogService {
         // TODO Auto-generated method stub
         return blogDAO.selecLoginInfo(map);
     }
-    
-    
-    
-   
+
+    @Override
+    public void insertUser(Map<String, Object> map) throws Exception {
+        // TODO Auto-generated method stub
+        blogDAO.insertUser(map); 
+    }
 }

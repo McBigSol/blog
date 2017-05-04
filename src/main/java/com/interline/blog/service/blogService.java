@@ -7,7 +7,7 @@ public interface blogService {
 
 	List<Map<String, Object>> selectBoardList(Map<String, Object> map)  throws Exception;
 	List<Map<String, Object>> selectCateList()  throws Exception;
-	Map<String, Object> selectBoardDetail(Map<String, Object> map) throws Exception;
+	List<Map<String, Object>> selectBoardDetail(Map<String, Object> map) throws Exception;
 	//書き込み 
     void insertBoard(Map<String, Object> map) throws Exception;
     //削除
@@ -20,5 +20,9 @@ public interface blogService {
     void insertComment(Map<String, Object> map) throws Exception;
     //コメント詳細
     List<Map<String, Object>> selectComment(Map<String, Object> map) throws Exception;
+    //ログイン情報取得
     Map<String, Object> selectLoginInfo(Map<String, Object> map) throws Exception;
+    //会員登録
+    void insertUser(Map<String, Object> map) throws Exception;
+    
 }

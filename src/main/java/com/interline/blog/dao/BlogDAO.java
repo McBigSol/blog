@@ -34,8 +34,8 @@ public class BlogDAO extends AbstractDAO{
     }
     //ポスト詳細
     @SuppressWarnings("unchecked")
-    public Map<String, Object> selectBoardDetail(Map<String, Object> map) throws Exception{
-        return (Map<String, Object>) selectOne("blog.selectBoardDetail", map);
+    public List<Map<String, Object>> selectBoardDetail(Map<String, Object> map) throws Exception{
+        return (List<Map<String, Object>>) selectList("blog.selectBoardDetail", map);
     }
     //ポスト削除
     public void deleteBoard(Map<String, Object> map) throws Exception{
@@ -49,7 +49,7 @@ public class BlogDAO extends AbstractDAO{
     //カテゴリで検索
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> selectBoardCategory(Map<String, Object> map) throws Exception{
-        return (List<Map<String, Object>>)selectList("blog.selectBoardCategory",map);
+        return (List<Map<String, Object>>)selectPagingList("blog.selectBoardCategory",map);
     }
     //ページング検索
     @SuppressWarnings("unchecked")
@@ -69,5 +69,9 @@ public class BlogDAO extends AbstractDAO{
     @SuppressWarnings("unchecked")
     public Map<String, Object> selecLoginInfo(Map<String, Object> map) throws Exception{
         return (Map<String, Object>)selectOne("blog.selectLoginInfo", map);
+    }
+  //コメント登録
+    public void insertUser(Map<String, Object> map) throws Exception{
+        insert("blog.insertUser", map);
     }
 }

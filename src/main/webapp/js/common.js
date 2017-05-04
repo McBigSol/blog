@@ -61,6 +61,7 @@ function ComAjax(opt_formId){
     };
      
     this.ajax = function ajax(){
+    	console.log("ajax() : " + this.formId);
         if(this.formId != "commonForm"){
             this.param += "&" + $("#" + this.formId).serialize();
         }
@@ -100,7 +101,7 @@ function gfn_renderPaging(params){
      
     var recordCount = params.recordCount; //페이지당 레코드 수
     if(gfn_isNull(recordCount) == true){
-        recordCount = 20;
+        recordCount = 5;
     }
     var totalIndexCount = Math.ceil(totalCount / recordCount); // 전체 인덱스 수
     gfv_eventName = params.eventName;
@@ -112,9 +113,21 @@ function gfn_renderPaging(params){
      
     var first = (parseInt((currentIndex-1) / 10) * 10) + 1;
     var last = (parseInt(totalIndexCount/10) == parseInt(currentIndex/10)) ? totalIndexCount%10 : 10;
+    //parseIntのため既存の数式では、問題があるため、固定でセット
+    if(currentIndex == 10){
+    	console.log("currentIndex 10");
+    	last = 10;
+    }
+    
     var prev = (parseInt((currentIndex-1)/10)*10) - 9 > 0 ? (parseInt((currentIndex-1)/10)*10) - 9 : 1;
     var next = (parseInt((currentIndex-1)/10)+1) * 10 + 1 < totalIndexCount ? (parseInt((currentIndex-1)/10)+1) * 10 + 1 : totalIndexCount;
-     
+    console.log("totalIndexCount : " + totalIndexCount);
+    console.log("currentIndex : " + currentIndex);
+    console.log("first : " + first);
+    console.log("last : " + last);
+    console.log("prev : " + prev);
+    console.log("next : " + next);
+    
     if(totalIndexCount > 10){ //전체 인덱스가 10이 넘을 경우, 맨앞, 앞 태그 작성
         preStr += "<a href='#this' class='pad_5' onclick='_movePage(1)'>[<<]</a>" +
                 "<a href='#this' class='pad_5' onclick='_movePage("+prev+")'>[<]</a>";
@@ -133,10 +146,10 @@ function gfn_renderPaging(params){
      
     for(var i=first; i<(first+last); i++){
         if(i != currentIndex){
-            str += "<a href='#this' class='pad_5' onclick='_movePage("+i+")'>"+i+"</a>";
+            str += "<a href='#this' class='pad_5' onclick='_movePage("+i+")'>  | "+i+" |  </a>";
         }
         else{
-            str += "<b><a href='#this' class='pad_5' onclick='_movePage("+i+")'>"+i+"</a></b>";
+            str += "<b><a href='#this' class='pad_5' onclick='_movePage("+i+")'>  | "+i+" |  </a></b>";
         }
     }
     $("#"+divId).append(preStr + str + postStr);
@@ -145,9 +158,11 @@ function gfn_renderPaging(params){
 function _movePage(value){
     $("#"+gfv_pageIndex).val(value);
     if(typeof(gfv_eventName) == "function"){
-        gfv_eventName(value);
+    	console.log("if typeof");
+    	gfv_eventName(value);
     }
     else {
+    	
         eval(gfv_eventName + "(value);");
     }
 }

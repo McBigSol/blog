@@ -16,14 +16,34 @@
         </tr>
         <tr>
             <td>
-                <div class="main-contents">
+               <div class="main-contents">
                 <br/>
                 <br/>
                 <br/>
                 <br/>
                 <br/>
                 <br/>
+               
                 <center>
+                    <c:if test="${loginFlg == false}">
+		               <table class="error-contents" >
+		                   <thead>
+		                       <tr>
+		                           <td>
+		                               ※認証失敗いたしました。
+		                           </td>
+		                       </tr>
+		                   </thead>
+		                   <tbody>
+		                       <tr>
+		                           <td>
+		                               ID又は、パスワードに謝りがあります。<br>
+		                               ご確認の上、再度お確かめください。
+		                           </td>
+		                       </tr>
+		                   </tbody>
+		               </table>
+                    </c:if>
                     <form id="frm">
                     <table class="login-contents">
                         <thead>

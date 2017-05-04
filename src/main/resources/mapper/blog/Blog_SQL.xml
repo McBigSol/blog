@@ -79,22 +79,29 @@
                 CATEGORY_MASTER c
             ON p.POST_CATEGORY = c.CATE_CODE
             WHERE 
+                p.DEL_STATUS = 'N'
+        ]]>
+        <if test="POST_IDX != null and POST_IDX != ''">
+           <![CDATA[
+           AND 
                 p.POST_IDX = #{POST_IDX}
-            AND 
-                p.DEL_STATUS = 'N';
+           ]]>
+        </if>
+        <![CDATA[
+        ORDER BY p.POST_IDX DESC;   
         ]]>
     </select>
     <!-- カテゴリ検索 -->
     <select id="selectBoardCategory" parameterType="hashmap" resultType="hashmap">
+        <include refid="common.pagingPre"/>
         <![CDATA[
              SELECT
                 p.POST_IDX,
                 p.POST_CATEGORY,
                 c.CATE_TITLE as POST_CATE_TITLE,
                 p.TITLE,
-                p.CONTENTS,
                 p.DEL_STATUS,
-                p.REG_DATE,
+                DATE_FORMAT(p.REG_DATE,'%Y-%m-%d') as REG_DATE,
                 p.WRITER    
             FROM 
                 POST p
@@ -105,8 +112,9 @@
                 p.DEL_STATUS = 'N'
             AND
                 p.POST_CATEGORY = #{CATE_CODE}
-            ORDER BY p.POST_IDX DESC; 
+            ORDER BY p.POST_IDX DESC
         ]]>
+        <include refid="common.pagingPost"/>
     </select>
     
     <update id="deleteBoard" parameterType="hashmap">
@@ -154,7 +162,8 @@
     <select id="selectComment" parameterType="hashmap" resultType="hashmap">
        <![CDATA[
         SELECT
-             c.CONTENTS
+             c.POST_IDX
+            ,c.CONTENTS
             ,c.WRITER
             ,u.NICK_NAME
             ,u.AUTHORITY
@@ -165,9 +174,16 @@
         ON 
             c.WRITER = u.USER_CODE
         WHERE
-            c.POST_IDX = #{POST_IDX}
-        AND
-            c.DEL_STATUS = 'N'; 
+            c.DEL_STATUS = 'N'
+        ]]> 
+        <if test="POST_IDX != null and POST_IDX != ''">
+           <![CDATA[
+            AND
+                c.POST_IDX = #{POST_IDX}
+            ]]>
+        </if>
+        <![CDATA[
+        ORDER BY c.COMMENT_IDX DESC; 
         ]]>
     </select>
     <select id="selectLoginInfo" parameterType="hashmap" resultType="hashmap">
@@ -186,4 +202,20 @@
                 PASSWORD = #{LOGIN_PW}
         ]]>
     </select>
+    <insert id="insertUser" parameterType="hashmap">
+        <![CDATA[
+            INSERT INTO USER
+                (
+                     USER_ID
+                    ,PASSWORD
+                    ,NICK_NAME
+                )
+                VALUES
+                (
+                     #{ID}
+                    ,#{PASSWORD}
+                    ,#{NICKNAME}
+                );
+        ]]>
+    </insert>
 </mapper>

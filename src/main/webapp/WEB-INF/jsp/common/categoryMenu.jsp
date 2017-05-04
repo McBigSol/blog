@@ -7,7 +7,7 @@
 <%@ include file="/WEB-INF/include/include-header.jsp" %>
 </head>
 <body>
-    <div class="category-menu" style="vertical-align: top;">
+    <div class="category-menu">
     <table class="vAlign_top wdp_90">
     <c:choose>
         <c:when test="${fn:length(cate_list) > 0}">

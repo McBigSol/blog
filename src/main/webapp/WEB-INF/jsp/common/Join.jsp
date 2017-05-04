@@ -73,8 +73,24 @@
                             </td>
                         </tr>
 				        <tr>
+                            <td>
+                                ニックネーム
+                            </td>
+                            <td>
+                                <input type="text" id="NICKNAME" name="NICKNAME"  class="wdp_90"/>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+				        <tr>
+                            <td colspan="3">
+                                <hr>
+                            </td>
+                        </tr>
+				        <tr>
 				            <td colspan="3" class="tCenter">
-				                <a href="#this" id="join" name="join">登録</a>
+				                <a href="#this" id="join" name="join">登録</a> | 
+				                <a href="#this" id="reset" name="reset">リセット</a>
 				            </td>
 				        </tr>
 				    </table>
@@ -92,12 +108,21 @@ $(document).ready(function(){
         e.preventDefault();
         fn_join();
     });
-    
+
+    $("#reset").on("click", function(e){ //修正に属性セット
+        e.preventDefault();
+        fn_reset();
+    });
 });
 function fn_join(){
     var comSubmit = new ComSubmit("frm");
     comSubmit.setUrl("<c:url value='/blog/joinConfirm.do' />");
     comSubmit.submit();
+}
+function fn_reset(){
+	$("#ID").val("");
+	$("#PASSWORD").val("");
+	$("#NICKNAME").val("");
 }
 </script>
 </html>

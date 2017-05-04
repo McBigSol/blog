@@ -20,6 +20,12 @@
                             <td>
                                 ${loginInfo.NICK_NAME}さん　ようこそ！
                             </td> 
+                            <td>
+                                |
+                            </td>
+                            <td>
+                                <a href="<c:url value='/blog/logout.do'/>">ログアウト</a>
+                            </td>
                         </c:when>
                         <c:otherwise>
 	                        <td>
@@ -44,7 +50,9 @@
         <tr>
             <td>
                 <div class="banner">
-                    <img src="<c:url value='/img/blog_title.png' />" width="100%" height="100%"/>     
+                <a href='<c:url value="/blog/postList.do"/>'>
+                    <img src="<c:url value='/img/blog_title.png' />" width="100%" height="100%"/>
+                </a>     
                 </div>                
             </td>
         </tr>
@@ -56,11 +64,9 @@
 	                </div>
 	                <%-- 管理者メニュー --%>
 	                <div >
-	                   <c:choose>
-                           <c:when test="${fn:length(loginInfo) > 0 }">
-	                           <a href="<c:url value='/blog/openBoardWrite.do' />" class="menu_l" >新規作成</a>
-	                       </c:when>
-	                   </c:choose> 
+                       <c:if test="${loginInfo.USER_CODE == 0 }">
+                           <a href="<c:url value='/blog/openBoardWrite.do' />" class="menu_l" >新規作成</a>
+                       </c:if> 
 	                </div>
 	                <div class="menu_r">
 	                   <!-- Vistor  -->

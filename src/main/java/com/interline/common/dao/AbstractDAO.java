@@ -75,8 +75,8 @@ public class AbstractDAO {
         if(StringUtils.isEmpty(strPageRow) == false){
             nPageRow = Integer.parseInt(strPageRow);
         }
-        map.put("START", (nPageIndex * nPageRow) + 1);
-        map.put("END", (nPageIndex * nPageRow) + 5);
+        map.put("START", (nPageIndex * nPageRow));
+        map.put("END",  5);
         //map.put("END", 15);
         
         return sqlSession.selectList(queryId, map);

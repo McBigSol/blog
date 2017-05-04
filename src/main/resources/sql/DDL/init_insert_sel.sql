@@ -71,7 +71,7 @@ INSERT INTO USER
 VALUES
 (
 	
-	'kunameko'
+	'kumaneko'
     ,'zndhk0'
     ,'クマネコ'
     ,'0'
